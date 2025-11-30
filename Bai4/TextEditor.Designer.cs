@@ -54,7 +54,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.BackColor = Color.SlateGray;
+            menuStrip1.BackColor = Color.SteelBlue;
             menuStrip1.ImageScalingSize = new Size(20, 20);
             menuStrip1.Items.AddRange(new ToolStripItem[] { systemToolStripMenuItem, formatToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
@@ -117,7 +117,7 @@
             // 
             // toolStrip1
             // 
-            toolStrip1.BackColor = Color.LightSlateGray;
+            toolStrip1.BackColor = Color.SteelBlue;
             toolStrip1.ImageScalingSize = new Size(20, 20);
             toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonSave, toolStripSeparator1, toolStripComboBoxFont, toolStripComboBoxSize, toolStripButtonBold, toolStripButtonItalic, toolStripButtonUnderline });
             toolStrip1.Location = new Point(0, 28);
@@ -197,7 +197,7 @@
             // 
             // labelTitle
             // 
-            labelTitle.BackColor = Color.LightSteelBlue;
+            labelTitle.BackColor = Color.LightSkyBlue;
             labelTitle.Dock = DockStyle.Top;
             labelTitle.Font = new Font("Segoe UI Black", 22.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             labelTitle.Location = new Point(0, 56);
@@ -216,6 +216,7 @@
             richTextBox.Size = new Size(800, 334);
             richTextBox.TabIndex = 4;
             richTextBox.Text = "";
+            richTextBox.SelectionChanged += richTextBox_SelectionChanged;
             // 
             // TextEditor
             // 

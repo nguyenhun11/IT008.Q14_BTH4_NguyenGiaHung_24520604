@@ -10,10 +10,14 @@ namespace Bai4
         static string textFile = "";
         static bool isOpen = false;
 
+
+        bool isUpdatingUI = false;
+
         public TextEditor()
         {
             InitializeComponent();
             InitializeCombobox();
+            richTextBox.SelectionChanged += new EventHandler(richTextBox_SelectionChanged);
         }
 
         private void InitializeCombobox()
@@ -27,9 +31,38 @@ namespace Bai4
                 toolStripComboBoxSize.Items.Add(i);
             }
 
-            // Đã bỏ comment và sẽ chạy tốt sau khi sửa hàm changeFontStyle bên dưới
             toolStripComboBoxFont.Text = "Tahoma";
-            toolStripComboBoxSize.Text = "12";
+            toolStripComboBoxSize.Text = "14";
+        }
+
+        private void richTextBox_SelectionChanged(object sender, EventArgs e)
+        {
+            isUpdatingUI = true;
+
+            try
+            {
+                if (richTextBox.SelectionFont != null)
+                {
+                    toolStripComboBoxFont.Text = richTextBox.SelectionFont.Name;
+                    toolStripComboBoxSize.Text = ((int)richTextBox.SelectionFont.Size).ToString();
+
+                    toolStripButtonBold.Checked = richTextBox.SelectionFont.Bold;
+                    toolStripButtonItalic.Checked = richTextBox.SelectionFont.Italic;
+                    toolStripButtonUnderline.Checked = richTextBox.SelectionFont.Underline;
+                }
+                else
+                {
+                    toolStripComboBoxFont.Text = "";
+                    toolStripComboBoxSize.Text = "";
+                    toolStripButtonBold.Checked = false;
+                    toolStripButtonItalic.Checked = false;
+                    toolStripButtonUnderline.Checked = false;
+                }
+            }
+            finally
+            {
+                isUpdatingUI = false;
+            }
         }
 
         private void formatToolStripMenuItem_Click(object sender, EventArgs e)
@@ -41,40 +74,36 @@ namespace Bai4
             fontdialog.ShowHelp = true;
             if (fontdialog.ShowDialog() == DialogResult.OK)
             {
-                // SỬA: Chỉ áp dụng cho vùng chọn thay vì toàn bộ văn bản
                 richTextBox.SelectionFont = fontdialog.Font;
-                richTextBox.SelectionColor = fontdialog.Color; // Áp dụng cả màu nếu chọn
+                richTextBox.SelectionColor = fontdialog.Color;
             }
         }
 
         private void changeFontStyle(object sender, EventArgs e)
         {
+            if (isUpdatingUI) return;
+
             try
             {
                 string fontName = toolStripComboBoxFont.Text;
                 string fontSizeStr = toolStripComboBoxSize.Text;
 
-                // Kiểm tra dữ liệu hợp lệ trước khi tạo Font
                 if (!string.IsNullOrEmpty(fontName) && !string.IsNullOrEmpty(fontSizeStr))
                 {
                     float fontSize = float.Parse(fontSizeStr);
 
-                    // SỬA LỖI TẠI ĐÂY:
-                    // 1. Lấy style hiện tại của vùng chọn (Bold, Italic...) để giữ nguyên
                     FontStyle currentStyle = FontStyle.Regular;
                     if (richTextBox.SelectionFont != null)
                     {
                         currentStyle = richTextBox.SelectionFont.Style;
                     }
 
-                    // 2. Tạo font mới với Font Family, Size mới nhưng giữ Style cũ
-                    // 3. Gán vào SelectionFont thay vì Font (Font sẽ đổi cả bài)
                     richTextBox.SelectionFont = new Font(fontName, fontSize, currentStyle);
                 }
             }
-            catch (Exception)
+            catch
             {
-                // Bỏ qua lỗi nếu font chưa load xong hoặc font không hỗ trợ style hiện tại
+                return;
             }
         }
 
@@ -83,14 +112,16 @@ namespace Bai4
             if (richTextBox.SelectionFont != null)
             {
                 Font font = richTextBox.SelectionFont;
-                FontStyle fs = font.Style; // Lấy style hiện tại ngắn gọn hơn
+                FontStyle fs = font.Style;
 
                 if (font.Bold)
-                    fs &= ~FontStyle.Bold; // Bỏ Bold
+                    fs &= ~FontStyle.Bold;
                 else
-                    fs |= FontStyle.Bold;  // Thêm Bold
+                    fs |= FontStyle.Bold;
 
                 richTextBox.SelectionFont = new Font(font.FontFamily, font.Size, fs);
+
+                toolStripButtonBold.Checked = !toolStripButtonBold.Checked;
             }
         }
 
@@ -107,6 +138,8 @@ namespace Bai4
                     fs |= FontStyle.Italic;
 
                 richTextBox.SelectionFont = new Font(font.FontFamily, font.Size, fs);
+
+                toolStripButtonItalic.Checked = !toolStripButtonItalic.Checked;
             }
         }
 
@@ -123,6 +156,8 @@ namespace Bai4
                     fs |= FontStyle.Underline;
 
                 richTextBox.SelectionFont = new Font(font.FontFamily, font.Size, fs);
+
+                toolStripButtonUnderline.Checked = !toolStripButtonUnderline.Checked;
             }
         }
 
@@ -155,7 +190,6 @@ namespace Bai4
                 SaveAs();
             else
             {
-                // Dùng StreamWriter với Text để tránh lỗi font chữ tiếng Việt
                 using (StreamWriter sw = new StreamWriter(textFile))
                 {
                     sw.Write(richTextBox.Text);
@@ -169,7 +203,7 @@ namespace Bai4
             saveTextFile.Filter = "Text file (*.txt)|*.txt|Document file (*.doc)|*.doc|All files (*.*)|*.*";
             if (saveTextFile.ShowDialog() == DialogResult.OK)
             {
-                textFile = saveTextFile.FileName; // Cập nhật đường dẫn file hiện tại
+                textFile = saveTextFile.FileName;
                 isOpen = true;
                 this.Text = textFile;
 
@@ -213,7 +247,6 @@ namespace Bai4
                 this.Text = textFile;
                 isOpen = true;
 
-                // Đọc file
                 try
                 {
                     richTextBox.Text = File.ReadAllText(textFile);
@@ -239,7 +272,6 @@ namespace Bai4
                 {
                     Application.Exit();
                 }
-                // Cancel thì không làm gì cả
             }
             else
             {
