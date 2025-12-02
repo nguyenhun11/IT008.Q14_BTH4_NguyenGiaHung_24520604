@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             groupBox1 = new GroupBox();
             buttonCopy = new Button();
             buttonDes = new Button();
@@ -42,6 +43,7 @@
             button3 = new Button();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
+            toolTip1 = new ToolTip(components);
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -135,9 +137,9 @@
             label2.Location = new Point(33, 88);
             label2.Margin = new Padding(30, 10, 10, 10);
             label2.Name = "label2";
-            label2.Size = new Size(237, 28);
+            label2.Size = new Size(238, 28);
             label2.TabIndex = 1;
-            label2.Text = "Đường Dẫn Thư mục Đích";
+            label2.Text = "Đường Dẫn Thư Mục Đích";
             // 
             // label1
             // 
@@ -249,5 +251,6 @@
         private Button button3;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel;
+        private ToolTip toolTip1;
     }
 }

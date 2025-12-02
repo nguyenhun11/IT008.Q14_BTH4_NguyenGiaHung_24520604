@@ -162,7 +162,6 @@
             // 
             toolStripComboBoxSize.Name = "toolStripComboBoxSize";
             toolStripComboBoxSize.Size = new Size(80, 28);
-            toolStripComboBoxSize.OwnerChanged += changeFontStyle;
             toolStripComboBoxSize.TextChanged += changeFontStyle;
             // 
             // toolStripButtonBold
@@ -230,6 +229,7 @@
             MainMenuStrip = menuStrip1;
             Name = "TextEditor";
             Text = "Soạn thảo văn bản";
+            FormClosing += TextEditor_FormClosing;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             toolStrip1.ResumeLayout(false);

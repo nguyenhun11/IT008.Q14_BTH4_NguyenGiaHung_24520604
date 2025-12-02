@@ -1,16 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
-
-namespace Bai4
+﻿namespace Bai4
 {
     public partial class TextEditor : Form
     {
         static string textFile = "";
         static bool isOpen = false;
-
-
         bool isUpdatingUI = false;
 
         public TextEditor()
@@ -26,10 +19,8 @@ namespace Bai4
             {
                 toolStripComboBoxFont.Items.Add(font.Name);
             }
-            for (int i = 5; i < 72; i++)
-            {
-                toolStripComboBoxSize.Items.Add(i);
-            }
+
+            toolStripComboBoxSize.Items.AddRange(new object[] { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72 });
 
             toolStripComboBoxFont.Text = "Tahoma";
             toolStripComboBoxSize.Text = "14";
@@ -177,10 +168,11 @@ namespace Bai4
                         break;
                 }
             }
-            this.Text = "Untittled.txt";
+            this.Text = "Untittled.rtf";
             richTextBox.Text = "";
             toolStripComboBoxFont.Text = "Tahoma";
             toolStripComboBoxSize.Text = "14";
+            textFile = "";
             isOpen = false;
         }
 
@@ -190,9 +182,22 @@ namespace Bai4
                 SaveAs();
             else
             {
-                using (StreamWriter sw = new StreamWriter(textFile))
+                try
                 {
-                    sw.Write(richTextBox.Text);
+                    // Kiểm tra đuôi file để chọn chế độ lưu phù hợp
+                    if (Path.GetExtension(textFile).ToLower() == ".txt")
+                    {
+                        richTextBox.SaveFile(textFile, RichTextBoxStreamType.PlainText);
+                    }
+                    else
+                    {
+                        // Mặc định lưu bao gồm định dạng (RTF)
+                        richTextBox.SaveFile(textFile, RichTextBoxStreamType.RichText);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi lưu file: " + ex.Message);
                 }
             }
         }
@@ -200,17 +205,15 @@ namespace Bai4
         private void SaveAs()
         {
             SaveFileDialog saveTextFile = new SaveFileDialog();
-            saveTextFile.Filter = "Text file (*.txt)|*.txt|Document file (*.doc)|*.doc|All files (*.*)|*.*";
+            saveTextFile.Filter = "Rich Text Format (*.rtf)|*.rtf|Text file (*.txt)|*.txt|All files (*.*)|*.*";
+
             if (saveTextFile.ShowDialog() == DialogResult.OK)
             {
                 textFile = saveTextFile.FileName;
                 isOpen = true;
                 this.Text = textFile;
 
-                using (StreamWriter s = new StreamWriter(textFile))
-                {
-                    s.Write(richTextBox.Text);
-                }
+                toolStripButtonSave_Click(null, null);
             }
         }
 
@@ -229,7 +232,7 @@ namespace Bai4
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openTextFile = new OpenFileDialog();
-            openTextFile.Filter = "Text file (*.txt)|*.txt|Document file (*.doc)|*.doc|All files (*.*)|*.*";
+            openTextFile.Filter = "Rich Text Format (*.rtf)|*.rtf|Text file (*.txt)|*.txt|Document file (*.doc)|*.doc|All files (*.*)|*.*";
             if (openTextFile.ShowDialog() == DialogResult.OK)
             {
                 if (richTextBox.Text != "")
@@ -249,34 +252,44 @@ namespace Bai4
 
                 try
                 {
-                    richTextBox.Text = File.ReadAllText(textFile);
+                    if (Path.GetExtension(textFile).ToLower() == ".txt")
+                    {
+                        richTextBox.LoadFile(textFile, RichTextBoxStreamType.PlainText);
+                    }
+                    else
+                    {
+                        richTextBox.LoadFile(textFile, RichTextBoxStreamType.RichText);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi đọc file: " + ex.Message);
+                    MessageBox.Show("Lỗi đọc file hoặc định dạng không hợp lệ: " + ex.Message);
                 }
             }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Application.Exit();
+        }
+
+        private void TextEditor_FormClosing(object sender, FormClosingEventArgs e)
+        {
             if (richTextBox.Text != "")
             {
-                DialogResult dr = MessageBox.Show("Bạn có muốn lưu các thay đổi?", "Thoát", MessageBoxButtons.YesNoCancel);
+                DialogResult dr = MessageBox.Show("Bạn có muốn lưu các thay đổi trước khi thoát?", "Thoát", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
                 if (dr == DialogResult.Yes)
                 {
                     toolStripButtonSave_Click(sender, e);
-                    Application.Exit();
                 }
-                else if (dr == DialogResult.No)
+                else if (dr == DialogResult.Cancel)
                 {
-                    Application.Exit();
+                    e.Cancel = true;
                 }
-            }
-            else
-            {
-                Application.Exit();
             }
         }
+
+        
     }
 }

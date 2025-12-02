@@ -1,6 +1,3 @@
-using System;
-using System.Windows.Forms;
-
 namespace Bai5
 {
     public partial class QLSV : Form

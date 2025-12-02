@@ -20,12 +20,21 @@ namespace Bai6
         {
             InitializeComponent();
 
+            toolStripStatusLabel.Text = "";
+
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
 
             worker.DoWork += Worker_DoWork;
             worker.ProgressChanged += Worker_ProgressChanged;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+
+            toolTip1.SetToolTip(buttonSource, "Chọn thư mục nguồn");
+            toolTip1.SetToolTip(buttonDes, "Chọn thư mục đích");
+            toolTip1.SetToolTip(textBoxSource, "Đường dẫn thư mục nguồn");
+            toolTip1.SetToolTip(textBoxDes, "Đường dẫn thư mục đích");
+            toolTip1.SetToolTip(buttonCopy, "Bắt đầu sao chép thư mục");
+            toolTip1.SetToolTip(progressBar1, "Tiến trình sao chép");
         }
 
         // 1. Chọn Folder Nguồn (Dùng FolderBrowserDialog)
@@ -80,8 +89,6 @@ namespace Bai6
             // Truyền đường dẫn đích cuối cùng vào Worker
             worker.RunWorkerAsync(finalDest);
         }
-
-        // --- LOGIC XỬ LÝ (OS Principles) ---
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -185,13 +192,9 @@ namespace Bai6
 
             if (currentFile != null)
             {
-                // Bạn có thể chọn hiển thị Full đường dẫn hoặc chỉ Tên file
-
-                // Cách 1: Hiển thị full đường dẫn (C:\Folder\File.txt)
-                toolStripStatusLabel.Text = $"Đang sao chép: {currentFile}";
-
-                // Cách 2: Chỉ hiển thị tên file cho gọn (File.txt) -> Khuyên dùng nếu đường dẫn quá dài
-                // toolStripStatusLabel1.Text = $"Đang sao chép: {Path.GetFileName(currentFile)}";
+                string statusMessage = $"Đang sao chép: {currentFile}";
+                toolStripStatusLabel.Text = statusMessage;
+                toolTip1.SetToolTip(progressBar1, statusMessage);
             }
         }
 
@@ -202,7 +205,11 @@ namespace Bai6
             toolStripStatusLabel.Text = "Đã hoàn tất sao chép.";
 
             if (e.Error != null) MessageBox.Show("Lỗi: " + e.Error.Message);
-            else MessageBox.Show("Sao chép thư mục hoàn tất!");
+            else
+            {
+                MessageBox.Show("Sao chép thư mục hoàn tất!");
+                progressBar1.Value = 0;
+            }
         }
     }
 }
