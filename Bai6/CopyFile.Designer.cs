@@ -39,8 +39,6 @@
             label1 = new Label();
             groupBox2 = new GroupBox();
             progressBar1 = new ProgressBar();
-            button2 = new Button();
-            button3 = new Button();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolTip1 = new ToolTip(components);
@@ -156,8 +154,6 @@
             groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox2.BackColor = SystemColors.Control;
             groupBox2.Controls.Add(progressBar1);
-            groupBox2.Controls.Add(button2);
-            groupBox2.Controls.Add(button3);
             groupBox2.Font = new Font("Segoe UI", 12F);
             groupBox2.Location = new Point(39, 267);
             groupBox2.Margin = new Padding(30);
@@ -169,52 +165,26 @@
             // 
             // progressBar1
             // 
+            progressBar1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             progressBar1.Location = new Point(33, 46);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(632, 46);
             progressBar1.TabIndex = 6;
             // 
-            // button2
-            // 
-            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button2.BackColor = SystemColors.ControlDark;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.Location = new Point(1103, 85);
-            button2.Margin = new Padding(10, 10, 30, 10);
-            button2.Name = "button2";
-            button2.Size = new Size(60, 34);
-            button2.TabIndex = 5;
-            button2.Text = "...";
-            button2.UseVisualStyleBackColor = false;
-            // 
-            // button3
-            // 
-            button3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button3.BackColor = SystemColors.ControlDark;
-            button3.FlatStyle = FlatStyle.Flat;
-            button3.Location = new Point(1103, 37);
-            button3.Margin = new Padding(10, 10, 30, 10);
-            button3.Name = "button3";
-            button3.Size = new Size(60, 34);
-            button3.TabIndex = 4;
-            button3.Text = "...";
-            button3.UseVisualStyleBackColor = false;
-            // 
             // statusStrip1
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
             statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel });
-            statusStrip1.Location = new Point(0, 487);
+            statusStrip1.Location = new Point(0, 491);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(776, 26);
+            statusStrip1.Size = new Size(776, 22);
             statusStrip1.TabIndex = 8;
             statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel
             // 
             toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(151, 20);
-            toolStripStatusLabel.Text = "toolStripStatusLabel1";
+            toolStripStatusLabel.Size = new Size(0, 16);
             // 
             // CopyFile
             // 
@@ -247,8 +217,6 @@
         private Button buttonCopy;
         private GroupBox groupBox2;
         private ProgressBar progressBar1;
-        private Button button2;
-        private Button button3;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolTip toolTip1;
